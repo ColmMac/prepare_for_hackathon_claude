@@ -69,3 +69,4 @@ Or ask Claude: `commit everything with a good message` (it will ask before runni
 - [Claude Code docs](https://code.claude.com/docs/en/overview)
 - [Claude Code in Action](https://anthropic.skilljar.com/claude-code-in-action/)
 - [Introduction to Agent Skills](https://academy.claude.com/courses/introduction-to-agent-skills)
+# prepare_for_hackathon_claude
