@@ -43,7 +43,7 @@ cbc-workshop1/
 - [ ] **6. Add your own checks:** open `.claude/skills/demo-check/SKILL.md` and fill in "Our team's extra checks".
 - [ ] **7. Pitch:** run `/pitch-story`, then `/demo-check`. Aim for a GO.
 
-Stuck? The finished version is in the solutions repo: compare your files with it, or copy across the step you're on.
+Stuck? The finished version is in [cbc-workshop1-solutions](https://github.com/ZekiKam/cbc-workshop1-solutions): compare your files with it, or copy across the step you're on.
 
 ## Reuse it at your next hackathon
 - Replace `BRIEF.md` with the real brief and judging criteria.
