@@ -1,69 +1,61 @@
-# PLAN: <project name>
+# PLAN: Chore Roulette
 
-> This is your plan. Do the **Design** picks yourself, then run `/hack-plan` and it fills in the rest.
-> At your next hackathon, reset this file to the headings and do the same again.
-
-**One-liner:** <who it's for> can <do what> so that <outcome>.
+**One-liner:** Flatmates can spin a wheel to share out the week's chores so that nobody gets stuck with the bins twice in a row.
 
 ## Design
-Pick ONE option in each group by changing `[ ]` to `[x]`, or write your own on the last line.
-If you leave a group blank, `/hack-plan` will ask you to pick.
-
 **Vibe**
-- [ ] Flat noticeboard: warm paper, bold ink, one bright accent, chunky shadows
-- [ ] Retro arcade: dark background, neon accent, blocky headings
-- [ ] Swiss minimal: off-white, black, one red, strict grid, huge type
-- [ ] Soft and friendly: pastel colours, rounded corners, playful copy
-- [ ] My own:
+- [x] Retro arcade: dark background, neon accent, blocky headings
+  (on our light palette: blocky monospace headings, thick black borders, chunky shadows, red as the "neon")
 
 **Palette (background / ink / accent)**
-- [ ] Paper `#F4EFE4` / Ink `#1D1B16` / Tomato `#D9482B`
-- [ ] Night `#14161F` / Chalk `#EDEFF5` / Lime `#B6F23A`
-- [ ] White `#FAFAF7` / Black `#111111` / Signal red `#E63022`
-- [ ] Cream `#FFF6EC` / Plum `#3B2A4A` / Peach `#FF9F7A`
-- [ ] My own:
+- [x] White `#FAFAF7` / Black `#111111` / Signal red `#E63022`
 
-**Fonts (headings + body, use fonts already on the computer, no downloads)**
-- [ ] Georgia serif headings + system sans body
-- [ ] Monospace headings + system sans body
-- [ ] System sans everywhere, extra-bold headings
-- [ ] My own:
+**Fonts**
+- [x] Monospace headings + system sans body
 
-**Signature moment (the one thing judges will remember)**
-- [ ] A big spinning wheel with a satisfying slow-down
-- [ ] A "Fair play" note explaining who was skipped and why
-- [ ] A celebration screen when the whole rota is done
-- [ ] My own:
+**Signature moment**
+- [x] A big spinning wheel with a satisfying slow-down
 
 **Must look good on**
-- [ ] Phone (360px wide)
-- [ ] Laptop
-- [ ] Projector (extra-large text for the demo)
+- [x] Laptop
 
 ## Demo path (what judges see, in order)
-<!-- /hack-plan fills this in: exactly 3 steps -->
-1.
-2.
-3.
+1. Add 3 flatmates and 3 chores (Bins, Dishes, Bathroom) in a few seconds.
+2. Hit SPIN: the big wheel slows down and lands on a name for each chore; last week's person for that chore is greyed out and skipped.
+3. Refresh the page: this week's rota (and last week's) is still there.
 
 ## MVP (build in this order, one feature per prompt)
-<!-- /hack-plan fills this in: at most 4 features -->
-- [ ] 1.
-- [ ] 2.
-- [ ] 3.
+- [x] 1. Page layout in the chosen design: header, Flatmates + Chores input panels, big wheel area, rota table. Static, placeholder data, palette + fonts as CSS variables.
+- [x] 2. Add/remove flatmates and chores, saved to localStorage; wheel slices redraw from the flatmate list.
+- [x] 3. SPIN: wheel animates with ease-out slow-down and assigns each chore in turn, never to whoever had it last week (if possible); results fill the rota table.
+- [x] 4. Rota persistence + "New week" button (current rota becomes last week), plus edge cases: <2 flatmates, no chores, more chores than people.
+
+## Next features (build in this order, one feature per prompt)
+- [x] 5. Long-name fix: wheel label font shrinks so names up to 20 characters fit inside their slice.
+- [x] 6. Fair-play note: after each chore's spin, show "<name> skipped for <chore>: did it last week" under the wheel, and keep the notes listed once the rota is set.
+- [x] 7. Landing celebration: when the wheel stops, the winning slice flashes red and the winner's name pops up big under the pointer.
+- [x] 8. Space bar to spin: pressing Space (when not typing in an input) triggers SPIN.
+- [x] 9. Copy to group chat: button copies this week's rota as plain text ("Bins: Priya" per line) to the clipboard, with a "Copied" confirmation.
 
 ## Cut list (not building, on purpose)
-<!-- /hack-plan fills this in -->
--
+- Chore streak leaderboard
+- Dark mode
+- Phone/projector layouts, sound effects, accounts or syncing between phones, editing past weeks
 
 ## Points strategy
-<!-- /hack-plan fills this in from the judging criteria in BRIEF.md -->
 | Criterion | Weight | How we score it |
 |---|---|---|
-| | | |
+| Impact | 30% | Open the pitch with the bins argument everyone's had; fairness rule is visible on screen |
+| Demo | 30% | 3-step path under 60s, rehearsed; seed data ready so nothing is typed slowly |
+| Design | 20% | The wheel is the hero; strict 3-colour palette, blocky arcade type, no generic hero text |
+| Technical | 20% | Survives refresh; handles 1 flatmate, 0 chores, more chores than people without breaking |
+| Sponsor: Best use of Claude | prize | Realistic: show CLAUDE.md rules, `/hack-plan` skill, one-feature-per-prompt workflow |
 
-## Timeline
-<!-- /hack-plan fills this in -->
+## Timeline (45 min)
 | Time | Goal |
 |---|---|
-| | |
+| 0–8 | Feature 1: layout |
+| 8–18 | Feature 2: add flatmates/chores + save |
+| 18–30 | Feature 3: spinning wheel + fair assignment |
+| 30–38 | Feature 4: rota persistence, new week, edge cases |
+| 38–45 | Pitch + one full demo rehearsal (last 15%) |

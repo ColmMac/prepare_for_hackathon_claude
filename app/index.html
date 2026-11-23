@@ -5,13 +5,381 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Chore Roulette</title>
   <style>
-    /* Claude builds the styles here */
+    :root {
+      --bg: #FAFAF7;
+      --ink: #111111;
+      --accent: #E63022;
+      --font-head: "Courier New", Courier, ui-monospace, monospace;
+      --font-body: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --border: 4px solid var(--ink);
+      --shadow: 6px 6px 0 var(--ink);
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font-family: var(--font-body); font-size: 16px; line-height: 1.4;
+    }
+    h1, h2, h3, th, button { font-family: var(--font-head); text-transform: uppercase; }
+    header {
+      border-bottom: var(--border); padding: 20px 32px;
+      display: flex; align-items: baseline; gap: 20px; flex-wrap: wrap;
+    }
+    h1 { margin: 0; font-size: 44px; letter-spacing: -1px; }
+    h1 span { color: var(--accent); }
+    header p { margin: 0; font-weight: 600; }
+    main {
+      max-width: 1200px; margin: 0 auto; padding: 32px;
+      display: grid; grid-template-columns: 280px 1fr 280px; gap: 32px; align-items: start;
+    }
+    .panel { border: var(--border); box-shadow: var(--shadow); padding: 16px; background: var(--bg); }
+    .panel h2 { margin: 0 0 12px; font-size: 20px; border-bottom: var(--border); padding-bottom: 8px; }
+    .add { display: flex; gap: 8px; margin-bottom: 12px; }
+    input {
+      flex: 1; min-width: 0; font: inherit; padding: 8px;
+      border: 3px solid var(--ink); background: var(--bg); color: var(--ink);
+    }
+    button {
+      font-size: 14px; font-weight: 700; padding: 8px 12px; cursor: pointer;
+      border: 3px solid var(--ink); background: var(--ink); color: var(--bg);
+    }
+    ul { list-style: none; margin: 0; padding: 0; }
+    li {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 8px 0; border-bottom: 2px dashed var(--ink); font-weight: 600;
+    }
+    li:last-child { border-bottom: 0; }
+    li button { padding: 2px 8px; background: var(--bg); color: var(--ink); }
+    .stage { text-align: center; }
+    .wheel-wrap { position: relative; width: 400px; max-width: 100%; margin: 0 auto; }
+    .wheel-wrap svg { width: 100%; height: auto; display: block; }
+    .pointer {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0; border-left: 18px solid transparent; border-right: 18px solid transparent;
+      border-top: 36px solid var(--accent); filter: drop-shadow(0 3px 0 var(--ink));
+    }
+    .spin {
+      margin-top: 28px; font-size: 32px; padding: 14px 56px; letter-spacing: 3px;
+      background: var(--accent); color: var(--bg); box-shadow: var(--shadow);
+    }
+    .now-spinning { font-family: var(--font-head); font-weight: 700; text-transform: uppercase; font-size: 22px; min-height: 32px; margin-top: 20px; }
+    .now-spinning b { color: var(--accent); }
+    .spin:disabled { opacity: .5; cursor: not-allowed; }
+    .hint { min-height: 22px; margin: 10px 0 0; font-weight: 600; }
+    .hint.warn { color: var(--accent); }
+    .newweek { margin-top: 20px; background: var(--bg); color: var(--ink); }
+    .newweek:disabled { opacity: .5; cursor: not-allowed; }
+    .notes { margin-top: 12px; }
+    .notes li { justify-content: center; border: 0; padding: 2px 0; font-size: 15px; }
+    .notes li b { color: var(--accent); margin-right: 6px; }
+    .winner {
+      position: absolute; top: 44px; left: 50%; transform: translateX(-50%); z-index: 2;
+      background: var(--bg); color: var(--ink); border: var(--border); box-shadow: var(--shadow);
+      font-family: var(--font-head); font-weight: 700; font-size: 34px; text-transform: uppercase;
+      padding: 4px 18px; white-space: nowrap; animation: pop .35s cubic-bezier(.2, 1.6, .4, 1);
+    }
+    .winner[hidden] { display: none; }
+    @keyframes pop { from { transform: translateX(-50%) scale(.3); opacity: 0; } to { transform: translateX(-50%) scale(1); opacity: 1; } }
+    #wheel .win { animation: flash .3s steps(1) 5; }
+    @keyframes flash { 0%, 100% { fill: var(--accent); } 50% { fill: var(--ink); } }
+    .rota h2 { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+    .copy { background: var(--bg); color: var(--ink); }
+    .copy:disabled { opacity: .5; cursor: not-allowed; }
+    #wheel { will-change: transform; }
+    .rota { grid-column: 1 / -1; }
+    table { width: 100%; border-collapse: collapse; }
+    th, td { text-align: left; padding: 10px 12px; border-bottom: 2px solid var(--ink); }
+    th { font-size: 14px; border-bottom: var(--border); }
+    td.chore { font-family: var(--font-head); font-weight: 700; text-transform: uppercase; }
+    td.now { font-weight: 800; color: var(--accent); }
+    td.last { opacity: .55; text-decoration: line-through; }
+    @media (max-width: 1000px) { main { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
-  <!-- Claude builds the app here. Start with: /hack-plan -->
+  <header>
+    <h1>Chore<span>/</span>Roulette</h1>
+    <p>Spin it. Nobody gets the bins twice in a row.</p>
+  </header>
+
+  <main>
+    <section class="panel">
+      <h2>Flatmates</h2>
+      <form class="add" id="flatmate-form"><input id="flatmate-input" placeholder="Name" aria-label="Flatmate name" maxlength="20" autocomplete="off"><button>Add</button></form>
+      <ul id="flatmate-list"></ul>
+    </section>
+
+    <section class="stage">
+      <div class="wheel-wrap">
+        <div class="pointer"></div>
+        <div class="winner" id="winner" hidden></div>
+        <svg id="wheel" viewBox="0 0 400 400" role="img" aria-label="Wheel of flatmates"></svg>
+      </div>
+      <div class="now-spinning" id="status" aria-live="polite">Press space to spin</div>
+      <div><button class="spin" id="spin">Spin</button></div>
+      <p class="hint" id="hint"></p>
+      <ul class="notes" id="notes" aria-label="Fair play notes"></ul>
+      <button class="newweek" id="newweek">New week</button>
+    </section>
+
+    <section class="panel">
+      <h2>Chores</h2>
+      <form class="add" id="chore-form"><input id="chore-input" placeholder="Chore" aria-label="Chore name" maxlength="20" autocomplete="off"><button>Add</button></form>
+      <ul id="chore-list"></ul>
+    </section>
+
+    <section class="panel rota">
+      <h2>This week's rota <button class="copy" id="copy" type="button">Copy for group chat</button></h2>
+      <table>
+        <thead><tr><th>Chore</th><th>This week</th><th>Last week</th></tr></thead>
+        <tbody id="rota-body"></tbody>
+      </table>
+    </section>
+  </main>
+
   <script>
-    // Claude builds the logic here
+    const KEY = "choreRoulette.v1";
+    const SVGNS = "http://www.w3.org/2000/svg";
+    const DEFAULTS = { flatmates: ["Alex", "Priya", "Sam"], chores: ["Bins", "Dishes", "Bathroom"],
+      rota: {}, notes: [], last: { Bins: "Alex", Dishes: "Priya", Bathroom: "Sam" } };
+
+    function load() {
+      try {
+        const d = JSON.parse(localStorage.getItem(KEY));
+        if (d && Array.isArray(d.flatmates) && Array.isArray(d.chores)) return Object.assign({ rota: {}, last: {}, notes: [] }, d);
+      } catch (e) {}
+      return JSON.parse(JSON.stringify(DEFAULTS));
+    }
+    function save() { try { localStorage.setItem(KEY, JSON.stringify(state)); } catch (e) {} }
+    const state = load();
+
+    function el(tag, text, attrs) {
+      const n = document.createElement(tag);
+      if (text != null) n.textContent = text;
+      for (const k in attrs || {}) n.setAttribute(k, attrs[k]);
+      return n;
+    }
+
+    function renderList(id, key) {
+      const ul = document.getElementById(id);
+      ul.replaceChildren();
+      if (!state[key].length) ul.appendChild(el("li", key === "flatmates" ? "No flatmates yet." : "No chores yet."));
+      state[key].forEach((name, i) => {
+        const li = el("li", name);
+        const b = el("button", "X", { "aria-label": "Remove " + name });
+        b.onclick = () => { if (spinning) return; state[key].splice(i, 1); save(); render(); };
+        li.appendChild(b);
+        ul.appendChild(li);
+      });
+    }
+
+    function pt(a, r) { // a: degrees clockwise from top
+      const t = a * Math.PI / 180;
+      return [200 + r * Math.sin(t), 200 - r * Math.cos(t)];
+    }
+
+    function labelSize(name, seg) {
+      // Courier glyphs are ~0.6em wide; label runs from rim (r=160) in towards the hub, keep ~35px clear of it.
+      const byLength = 125 / (0.6 * name.length);
+      const bySlice = 2 * 70 * Math.sin(seg * Math.PI / 360) * 0.8; // slice width at r=70
+      return Math.round(Math.max(9, Math.min(26, byLength, bySlice)));
+    }
+
+    function renderWheel(banned) {
+      const svg = document.getElementById("wheel");
+      svg.replaceChildren();
+      const names = state.flatmates, n = names.length;
+      const add = (tag, attrs, text) => { const e = document.createElementNS(SVGNS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); if (text) e.textContent = text; svg.appendChild(e); };
+      add("circle", { cx: 200, cy: 200, r: 190, fill: "var(--ink)" });
+      const fills = ["var(--ink)", "var(--accent)", "var(--bg)"];
+      if (n === 0) {
+        add("circle", { cx: 200, cy: 200, r: 180, fill: "var(--bg)" });
+        add("text", { x: 200, y: 205, "text-anchor": "middle", "font-family": "Courier New, monospace", "font-size": 22, "font-weight": 700, fill: "var(--ink)" }, "ADD FLATMATES");
+      }
+      names.forEach((name, i) => {
+        const fill = fills[i % 3], seg = 360 / n, a0 = i * seg, a1 = a0 + seg;
+        if (n === 1) add("circle", { cx: 200, cy: 200, r: 180, fill, "data-i": i });
+        else {
+          const [x0, y0] = pt(a0, 180), [x1, y1] = pt(a1, 180);
+          add("path", { d: `M200 200 L${x0} ${y0} A180 180 0 ${seg > 180 ? 1 : 0} 1 ${x1} ${y1} Z`, fill, stroke: "var(--ink)", "stroke-width": 3, "data-i": i });
+        }
+        if (name === banned && n > 1) { // last week's person for this chore: greyed out
+          const [x0, y0] = pt(a0, 180), [x1, y1] = pt(a1, 180);
+          add("path", { d: `M200 200 L${x0} ${y0} A180 180 0 ${seg > 180 ? 1 : 0} 1 ${x1} ${y1} Z`, fill: "var(--bg)", "fill-opacity": 0.78 });
+        }
+        const mid = a0 + seg / 2, [tx, ty] = pt(mid, 160);
+        add("text", {
+          x: tx, y: ty, transform: `rotate(${mid - 90} ${tx} ${ty})`, "text-anchor": "end", "dominant-baseline": "central",
+          "font-family": "Courier New, monospace", "font-size": labelSize(name, seg), "font-weight": 700,
+          fill: fill === "var(--bg)" ? "var(--ink)" : "var(--bg)"
+        }, name.toUpperCase());
+      });
+      add("circle", { cx: 200, cy: 200, r: 22, fill: "var(--bg)", stroke: "var(--ink)", "stroke-width": 5 });
+      svg.setAttribute("aria-label", n ? "Wheel of flatmates: " + names.join(", ") : "Empty wheel");
+    }
+
+    function renderRota() {
+      const tb = document.getElementById("rota-body");
+      tb.replaceChildren();
+      if (!state.chores.length) {
+        const tr = el("tr"); const td = el("td", "Add a chore to start the rota.", { colspan: 3 });
+        tr.appendChild(td); tb.appendChild(tr); return;
+      }
+      state.chores.forEach(c => {
+        const tr = el("tr");
+        tr.appendChild(el("td", c, { class: "chore" }));
+        tr.appendChild(el("td", state.rota[c] || "—", { class: "now" }));
+        tr.appendChild(el("td", state.last[c] || "—", { class: "last" }));
+        tb.appendChild(tr);
+      });
+    }
+
+    function renderControls() {
+      const nf = state.flatmates.length, nc = state.chores.length, hint = document.getElementById("hint");
+      let msg = "", warn = false;
+      if (!nf && !nc) { msg = "Add some flatmates and chores to get started."; warn = true; }
+      else if (!nf) { msg = "Add at least one flatmate to spin."; warn = true; }
+      else if (!nc) { msg = "Add a chore to spin for."; warn = true; }
+      else if (nf === 1) msg = "Only one flatmate, so no one to swap with. Add another for a fair spin.";
+      else if (nc > nf) msg = nc + " chores, " + nf + " people: some of you get two. Fair is fair.";
+      hint.textContent = msg; hint.className = "hint" + (warn ? " warn" : "");
+      document.getElementById("spin").disabled = spinning || !nf || !nc;
+      document.getElementById("newweek").disabled = spinning || !Object.keys(state.rota).length;
+      document.getElementById("copy").disabled = spinning || !Object.keys(state.rota).length;
+    }
+
+    function renderNotes() {
+      const ul = document.getElementById("notes");
+      ul.replaceChildren();
+      state.notes.forEach(t => { const li = el("li", t); li.prepend(el("b", "FAIR PLAY")); ul.appendChild(li); });
+    }
+
+    function render() {
+      renderNotes();
+      renderList("flatmate-list", "flatmates");
+      renderList("chore-list", "chores");
+      renderWheel();
+      renderRota();
+      renderControls();
+    }
+
+    function wireForm(formId, inputId, key) {
+      document.getElementById(formId).onsubmit = e => {
+        e.preventDefault();
+        if (spinning) return;
+        const input = document.getElementById(inputId), v = input.value.trim();
+        if (v && !state[key].some(x => x.toLowerCase() === v.toLowerCase())) {
+          state[key].push(v); save(); render();
+        }
+        input.value = ""; input.focus();
+      };
+    }
+    let spinning = false, rot = 0;
+    wireForm("flatmate-form", "flatmate-input", "flatmates");
+    wireForm("chore-form", "chore-input", "chores");
+    render();
+
+    // ---- Spin ----
+    const wheelEl = document.getElementById("wheel"), spinBtn = document.getElementById("spin"), statusEl = document.getElementById("status");
+
+    const winnerEl = document.getElementById("winner");
+    function celebrate(idx, name) { // winning slice flashes, name pops up under the pointer
+      const slice = wheelEl.querySelector(`[data-i="${idx}"]`);
+      if (slice) slice.classList.add("win");
+      winnerEl.hidden = true; void winnerEl.offsetWidth; // restart the pop animation
+      winnerEl.textContent = name; winnerEl.hidden = false;
+    }
+
+    function pick(chore, counts) {
+      const all = state.flatmates;
+      let pool = all.filter(p => p !== state.last[chore]); // fairness: not last week's person
+      if (!pool.length) pool = all;                        // only possible with 1 flatmate
+      const min = Math.min(...pool.map(p => counts[p]));   // spread chores evenly this week
+      pool = pool.filter(p => counts[p] === min);
+      return pool[Math.floor(Math.random() * pool.length)];
+    }
+
+    function spinTo(winnerIdx, n) {
+      return new Promise(resolve => {
+        const seg = 360 / n, mid = winnerIdx * seg + seg / 2;
+        const jitter = (Math.random() - 0.5) * seg * 0.6;
+        const need = ((-(mid + jitter) - rot) % 360 + 360) % 360;
+        const from = rot, to = rot + 360 * 5 + need, dur = 3200, t0 = performance.now();
+        (function frame(now) {
+          const t = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - t, 4); // ease-out quart
+          rot = from + (to - from) * e;
+          wheelEl.style.transform = `rotate(${rot}deg)`;
+          if (t < 1) requestAnimationFrame(frame); else resolve();
+        })(t0);
+      });
+    }
+
+    spinBtn.onclick = async () => {
+      if (spinning || !state.flatmates.length || !state.chores.length) return;
+      spinning = true; renderControls();
+      const people = state.flatmates.slice(), chores = state.chores.slice();
+      const counts = Object.fromEntries(people.map(p => [p, 0]));
+      state.rota = {}; state.notes = []; renderRota(); renderNotes();
+      for (const chore of chores) {
+        const skipped = state.last[chore];
+        if (people.length > 1 && people.includes(skipped)) {
+          state.notes.push(skipped + " skipped for " + chore + ": did it last week."); renderNotes();
+        }
+        statusEl.replaceChildren("Spinning for ", el("b", chore));
+        renderWheel(state.last[chore]);
+        await new Promise(r => setTimeout(r, 350));
+        const winner = pick(chore, counts);
+        await spinTo(people.indexOf(winner), people.length);
+        counts[winner]++; state.rota[chore] = winner; save(); renderRota();
+        celebrate(people.indexOf(winner), winner);
+        await new Promise(r => setTimeout(r, 1500));
+        winnerEl.hidden = true;
+      }
+      statusEl.textContent = "Rota set. No excuses.";
+      renderWheel();
+      spinning = false; renderControls();
+    };
+
+    document.addEventListener("keydown", e => {
+      if (e.code !== "Space" || e.repeat || e.ctrlKey || e.metaKey || e.altKey) return;
+      if (/^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return; // typing a name: leave the space alone
+      e.preventDefault();
+      if (document.activeElement && document.activeElement.tagName === "BUTTON") document.activeElement.blur(); // stop a focused button also firing
+      spinBtn.click();
+    });
+
+    function rotaText() {
+      const lines = state.chores.filter(c => state.rota[c]).map(c => c + ": " + state.rota[c]);
+      return ["This week's chores:"].concat(lines).join(String.fromCharCode(10));
+    }
+    function copyText(text) {
+      if (navigator.clipboard && navigator.clipboard.writeText) return navigator.clipboard.writeText(text).catch(() => fallbackCopy(text));
+      return Promise.resolve(fallbackCopy(text));
+    }
+    function fallbackCopy(text) { // file:// pages often have no clipboard API
+      const ta = el("textarea", text, { "aria-hidden": "true" });
+      ta.style.cssText = "position:fixed;top:0;left:0;opacity:0";
+      document.body.appendChild(ta); ta.select();
+      let ok = false;
+      try { ok = document.execCommand("copy"); } catch (e) {}
+      ta.remove();
+      if (!ok) throw new Error("copy failed");
+    }
+    const copyBtn = document.getElementById("copy");
+    copyBtn.onclick = async () => {
+      if (copyBtn.disabled) return;
+      let label = "Copied";
+      try { await copyText(rotaText()); } catch (e) { label = "Copy failed, select the table instead"; }
+      copyBtn.textContent = label;
+      setTimeout(() => { copyBtn.textContent = "Copy for group chat"; }, 1800);
+    };
+
+    document.getElementById("newweek").onclick = () => {
+      if (spinning || !Object.keys(state.rota).length) return;
+      state.last = Object.assign({}, state.last, state.rota); // this week becomes last week
+      state.rota = {}; state.notes = []; save();
+      statusEl.textContent = "New week. Last week's crew are greyed out.";
+      render();
+    };
   </script>
 </body>
 </html>
