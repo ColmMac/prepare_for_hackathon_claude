@@ -2,8 +2,8 @@
 
 **Claude Builder Club @ UoE, Workshop 1**
 
-Win hackathons with Claude: from raw idea to working prototype to winning pitch.
-Clone this repo into any hackathon, swap `BRIEF.md`, and go.
+A skeleton you tailor in the workshop, then reuse at every hackathon:
+raw idea → working prototype → winning pitch.
 
 ## Quick start
 ```bash
@@ -13,37 +13,42 @@ claude
 ```
 Log in with your **Claude Pro account**. Choose the Claude account option, not an API key, so you don't use your API credits.
 
+> Can't see `.claude/`? Folders starting with a dot are hidden. Mac Finder: **Cmd+Shift+.** · Terminal: `ls -a`
+
 ## What's inside
 ```
 cbc-workshop1/
-├── CLAUDE.md              ← rules Claude reads every session (stack, scope, design)
+├── CLAUDE.md              ← the rules Claude reads every session (tailor it)
 ├── BRIEF.md               ← the hackathon problem + judging criteria (swap per hackathon)
-├── app/index.html         ← you build the app here (one file, no install)
+├── PLAN.md                ← YOUR plan: pick a Design, then /hack-plan fills in the rest
+├── app/index.html         ← empty: you build the app here, one feature at a time
 ├── pitch/                 ← /pitch-story writes your pitch here
-├── secrets/               ← fake keys, blocked by .claude/settings.json (guardrails demo)
-├── solutions/             ← the finished readme-writer skill, if you fall behind
-├── demo/                  ← the hooks demo (instructor)
+├── secrets/               ← fake keys, blocked by .claude/settings.json
 └── .claude/
     ├── settings.json      ← permission rules: deny secrets/
     └── skills/
-        ├── hack-plan/     ← brief → PLAN.md (MVP, cut list, demo path)
+        ├── hack-plan/     ← fills in PLAN.md (MVP, cut list, demo path)
         ├── pitch-story/   ← 90-sec pitch + 5-slide outline
-        ├── demo-check/    ← go/no-go before judging
-        └── readme-writer/ ← YOU write this one in the workshop
+        ├── demo-check/    ← go/no-go, plus checks YOU add
+        └── readme-writer/ ← empty: YOU write this skill
 ```
 
-## Workshop steps
-1. **Plan:** press Shift+Tab until you reach plan mode, then type `/hack-plan`.
-2. **Build:** switch modes with Shift+Tab, then ask for MVP feature 1 from `PLAN.md`. Open `app/index.html` in your browser after each feature. Run `/clear` between features.
-3. **Write a skill:** create `.claude/skills/readme-writer/SKILL.md`, then say "write our README".
-4. **Pitch:** run `/pitch-story`, then `/demo-check`.
+## Your workshop checklist
+- [ ] **1. Tailor CLAUDE.md:** add one rule of your own under "Our team's rules".
+- [ ] **2. Pick your design:** open `PLAN.md` and tick one option in each Design group.
+- [ ] **3. Plan:** press Shift+Tab until you're in plan mode, then run `/hack-plan`. Read the plan it writes.
+- [ ] **4. Build one feature at a time:** send `Build MVP feature 1 from PLAN.md`.
+      **Open `app/index.html` in your browser and check it before you move on.** Then run `/clear` and ask for feature 2.
+- [ ] **5. Write your own skill:** create `.claude/skills/readme-writer/SKILL.md`, then run `/clear` and say `write our README`.
+- [ ] **6. Add your own checks:** open `.claude/skills/demo-check/SKILL.md` and fill in "Our team's extra checks".
+- [ ] **7. Pitch:** run `/pitch-story`, then `/demo-check`. Aim for a GO.
 
-Fallen behind? Run `git checkout mvp-done` to get a working app, then carry on from step 3.
+Stuck? The finished version is in the solutions repo: compare your files with it, or copy across the step you're on.
 
-## Use it at your next hackathon
+## Reuse it at your next hackathon
 - Replace `BRIEF.md` with the real brief and judging criteria.
-- Edit the tech stack in `CLAUDE.md` to match your team.
-- To use the skills in every project, copy them: `cp -r .claude/skills/* ~/.claude/skills/`
+- Reset `PLAN.md` to its headings, and change the stack in `CLAUDE.md` to fit your team.
+- Use the skills everywhere: `cp -r .claude/skills/* ~/.claude/skills/`
 
 ## Learn more
 - [Claude Code docs](https://code.claude.com/docs/en/overview)

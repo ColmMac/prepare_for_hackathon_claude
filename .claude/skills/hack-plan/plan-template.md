@@ -2,6 +2,14 @@
 
 **One-liner:** <who it's for> can <do what> so that <outcome>.
 
+## Design
+<!-- One pick per group: vibe, palette (background / ink / accent), fonts, signature moment, screens -->
+- Vibe:
+- Palette:
+- Fonts:
+- Signature moment:
+- Must look good on:
+
 ## Demo path (what judges see, in order)
 1. ...
 2. ...

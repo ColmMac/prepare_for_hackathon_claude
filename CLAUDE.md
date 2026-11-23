@@ -1,11 +1,12 @@
-# Hackathon Toolkit (CBC Workshop 1)
+# Hackathon Toolkit
 
 Claude reads this file at the start of every session. It sets the rules for this project.
-Swap `BRIEF.md` to reuse the toolkit at any hackathon.
+**Tailor it:** the defaults below are set for CBC Workshop 1. At your next hackathon, change the
+stack and rules to fit, swap `BRIEF.md`, and reset `PLAN.md` to its headings.
 
 ## What we're building
 Read `@BRIEF.md` for the problem, the judging criteria and the sponsor prizes.
-After `/hack-plan` has run, `PLAN.md` is the source of truth for scope.
+`PLAN.md` is the source of truth for scope and design. Run `/hack-plan` to fill it in.
 
 ## Tech stack (do not change without asking)
 - ONE file: `app/index.html` with inline `<style>` and `<script>`.
@@ -14,22 +15,22 @@ After `/hack-plan` has run, `PLAN.md` is the source of truth for scope.
 - It must work by double-clicking `app/index.html`.
 
 ## How to work
-- Build the demo path first: the 3 steps a judge will see in the demo. Polish comes later.
-- Build one feature at a time. After each one, tell me how to check it in the browser.
+- Build the demo path first: the 3 steps a judge will see. Polish comes later.
+- Build ONE MVP feature from `PLAN.md` per prompt. When it's done, STOP, tick it off in `PLAN.md`,
+  and tell me exactly what to click in the browser to check it. Don't start the next feature until I say so.
 - Keep changes small. If a feature needs more than ~150 new lines, propose a smaller version first.
 - Ask before adding any dependency, file or folder outside `app/`, `pitch/` and `PLAN.md`.
 - If something in `PLAN.md` is on the cut list, don't build it unless I say so.
 
 ## Design rules (no AI slop)
-- Choose a palette of 1 background, 1 ink and 1 accent colour, and use it everywhere.
+- Follow the `## Design` picks in `PLAN.md`: vibe, palette, fonts and signature moment.
+- Use exactly the palette picked there (1 background, 1 ink, 1 accent) everywhere.
 - Avoid purple-blue gradients, glassmorphism, emoji as icons, and generic "Welcome to X" hero text.
-- Use real copy written for flatmates, not lorem ipsum or marketing filler.
-- Use a clear type scale: one display font for headings and one body font.
-- It must work on a phone screen (360px wide).
+- Use real copy written for the people in `BRIEF.md`, not lorem ipsum or marketing filler.
 
 ## Off limits
 - Never read or edit anything in `secrets/`.
 
 ## Our team's rules
-<!-- Workshop step: add one rule of your own below, e.g. "Explain each change in one sentence" -->
+<!-- Workshop step: add at least one rule of your own, e.g. "Explain each change in one sentence" -->
 -
