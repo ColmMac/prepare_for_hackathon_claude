@@ -28,22 +28,37 @@ cbc-workshop1/
     ├── settings.json      ← permission rules: deny secrets/
     └── skills/
         ├── hack-plan/     ← fills in PLAN.md (MVP, cut list, demo path)
-        ├── pitch-story/   ← 90-sec pitch + 5-slide outline
+        ├── pitch-story/   ← pitch + speaker notes; slide-style.md = YOUR slide taste
         ├── demo-check/    ← go/no-go, plus checks YOU add
         └── readme-writer/ ← empty: YOU write this skill
 ```
 
 ## Your workshop checklist
 - [ ] **1. Tailor CLAUDE.md:** add one rule of your own under "Our team's rules".
-- [ ] **2. Pick your design:** open `PLAN.md` and tick one option in each Design group.
-- [ ] **3. Plan:** press Shift+Tab until you're in plan mode, then run `/hack-plan`. Read the plan it writes.
-- [ ] **4. Build one feature at a time:** send `Build MVP feature 1 from PLAN.md`.
-      **Open `app/index.html` in your browser and check it before you move on.** Then run `/clear` and ask for feature 2.
-- [ ] **5. Write your own skill:** create `.claude/skills/readme-writer/SKILL.md`, then run `/clear` and say `write our README`.
-- [ ] **6. Add your own checks:** open `.claude/skills/demo-check/SKILL.md` and fill in "Our team's extra checks".
-- [ ] **7. Pitch:** run `/pitch-story`, then `/demo-check`. Aim for a GO.
+- [ ] **2. Write your own skill:** create `.claude/skills/readme-writer/SKILL.md` (four lines). You'll run it after the build.
+- [ ] **3. Pick your design:** open `PLAN.md` and tick one option in each Design group.
+- [ ] **4. Plan:** press Shift+Tab until you're in plan mode, then run `/hack-plan`. Read the plan it writes.
+- [ ] **5. Build one feature at a time:** switch to auto mode, ask `List the MVP features in PLAN.md`,
+      then send `Build MVP feature 1 from PLAN.md`.
+      **Open `app/index.html` in your browser and check it before you move on.** Then `/clear` and ask for the next one.
+      For small fixes, switch to manual mode so you see each change before it happens.
+- [ ] **6. README:** run `/clear`, then say `write our README`. Your skill should pick it up.
+- [ ] **7. Pitch:** tick your picks in `.claude/skills/pitch-story/slide-style.md`, then run `/pitch-story`.
+- [ ] **8. Demo check:** add your own checks under "Our team's extra checks" in `.claude/skills/demo-check/SKILL.md`, then run `/demo-check`. Aim for a GO.
+- [ ] **9. Save it:** commit and push to your own GitHub repo (see below).
 
 Stuck? The finished version is in [cbc-workshop1-solutions](https://github.com/ZekiKam/cbc-workshop1-solutions): compare your files with it, or copy across the step you're on.
+
+## Save it to your own GitHub
+1. On github.com, create a new **empty** repo (no README), for example `my-hackathon-kit`.
+2. In this folder:
+```
+git add -A
+git commit -m "My hackathon toolkit"
+git remote set-url origin https://github.com/<your-username>/my-hackathon-kit
+git push -u origin main
+```
+Or ask Claude: `commit everything with a good message` (it will ask before running git).
 
 ## Reuse it at your next hackathon
 - Replace `BRIEF.md` with the real brief and judging criteria.
